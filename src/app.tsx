@@ -11,7 +11,9 @@ import {RequestConfig} from "@@/plugin-request/request";
 // import {prefix} from "stylis";
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
-const NO_NEED_WHITE_LIST = ['/user/register',loginPath]
+//const NO_NEED_WHITE_LIST = ['/user/register',loginPath]
+//TODO 现在直接删除了白名单里的loginPath，但是这样会使进入登录页时再查用户信息，看看能否修改
+const NO_NEED_WHITE_LIST = ['/user/register']
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
@@ -29,6 +31,7 @@ export async function getInitialState(): Promise<{
     // const { location } = history;
 
     if (NO_NEED_WHITE_LIST.includes(history.location.pathname)) {
+      // alert("进入app.tsx，白名单逻辑")
       return undefined;
     }
     try {
@@ -44,13 +47,13 @@ export async function getInitialState(): Promise<{
 
   // 如果是不需要登录态的页面，不执行
   if (NO_NEED_WHITE_LIST.includes(history.location.pathname)) {
+    // alert("进入app.tsx，白名单逻辑")
     return {
       // @ts-ignore
       fetchUserInfo,
       settings: defaultSettings as Partial<LayoutSettings>,
     };
   }
-
   const currentUser = await fetchUserInfo();
   return {
     // @ts-ignore
@@ -80,7 +83,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     onPageChange: () => {
       const { location } = history;
       // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser && location.pathname !== loginPath) {
+      if (!initialState?.currentUser && !NO_NEED_WHITE_LIST.includes(location.pathname)) {
+        // alert("进入app.tsx，白名单逻辑2")
         history.push(loginPath);
       }
     },

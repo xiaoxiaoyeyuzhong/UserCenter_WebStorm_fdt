@@ -21,6 +21,7 @@ import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
+import user from "../../../../mock/user";
 
 const useStyles = createStyles(({ token }) => {
   return {
@@ -97,6 +98,7 @@ const Login: React.FC = () => {
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
+    alert(userInfo);
     if (userInfo) {
       flushSync(() => {
         setInitialState((s) => ({
@@ -119,9 +121,11 @@ const Login: React.FC = () => {
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
-        const urlParams = new URL(window.location.href).searchParams;
-        const redirect = urlParams.get('redirect') || '/';
-        history.push(redirect);
+        // const urlParams = new URL(window.location.href).searchParams;
+        // const redirect = urlParams.get('redirect') || '/';
+        // history.push(redirect);
+        alert("发生什么事了")
+        history.push('/');
         return;
       }
       // 如果失败去设置用户错误信息
