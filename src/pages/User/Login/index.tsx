@@ -113,6 +113,12 @@ const Login: React.FC = () => {
         await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
         history.push(urlParams.get('redirect') || '/');
+        // if (!history)return;
+        // const {query} = history.location;
+        // const {redirect} = query as {
+        //   redirect: string;
+        // };
+        // history.push(redirect || '/');
         return;
       }
       // 如果失败去设置用户错误信息
@@ -216,7 +222,7 @@ const Login: React.FC = () => {
             }}
           >
             <ProFormCheckbox noStyle name="autoLogin">
-              自动登录功能
+              自动登录
             </ProFormCheckbox>
             <Divider type="vertical"/>
             <a
