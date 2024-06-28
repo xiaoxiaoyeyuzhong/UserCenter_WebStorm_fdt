@@ -16,11 +16,12 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import { Helmet, history, useModel } from '@umijs/max';
-import {Alert, Tabs, message, Button, Divider} from 'antd';
+import { Alert, Tabs, message, Button, Divider } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
+
 const useStyles = createStyles(({ token }) => {
   return {
     action: {
@@ -56,6 +57,7 @@ const useStyles = createStyles(({ token }) => {
     },
   };
 });
+
 const ActionIcons = () => {
   const { styles } = useStyles();
   return (
@@ -66,10 +68,12 @@ const ActionIcons = () => {
     </>
   );
 };
+
 const Lang = () => {
   const { styles } = useStyles();
-  return;
+  return null; // 确保返回null而不是空对象
 };
+
 const LoginMessage: React.FC<{
   content: string;
 }> = ({ content }) => {
@@ -84,11 +88,13 @@ const LoginMessage: React.FC<{
     />
   );
 };
+
 const Login: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
   const { styles } = useStyles();
+
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
     if (userInfo) {
@@ -100,6 +106,7 @@ const Login: React.FC = () => {
       });
     }
   };
+
   const handleSubmit = async (values: API.LoginParams) => {
     try {
       // 登录
@@ -108,17 +115,13 @@ const Login: React.FC = () => {
         type,
       });
       if (user) {
+        // alert(user);
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
         const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
-        // if (!history)return;
-        // const {query} = history.location;
-        // const {redirect} = query as {
-        //   redirect: string;
-        // };
-        // history.push(redirect || '/');
+        const redirect = urlParams.get('redirect') || '/';
+        history.push(redirect);
         return;
       }
       // 如果失败去设置用户错误信息
@@ -129,12 +132,14 @@ const Login: React.FC = () => {
       message.error(defaultLoginFailureMessage);
     }
   };
+
   const { status, type: loginType } = userLoginState;
+
   return (
     <div className={styles.container}>
       <Helmet>
         <title>
-          {'登录'}- {Settings.title}
+          {'登录'} - {Settings.title}
         </title>
       </Helmet>
       <Lang />
@@ -151,7 +156,7 @@ const Login: React.FC = () => {
           }}
           logo={<img alt="logo" src="/img/userCenter_fdt_logo.jpg" />}
           title="用户中心_田"
-          subTitle='用户登录界面'
+          subTitle="用户登录界面"
           initialValues={{
             autoLogin: true,
           }}
@@ -207,10 +212,6 @@ const Login: React.FC = () => {
                     type: 'string',
                     message: '密码长度不小于8！',
                   },
-                  {
-                    required: true,
-                    message: '密码是必填项！',
-                  },
                 ]}
               />
             </>
@@ -224,14 +225,14 @@ const Login: React.FC = () => {
             <ProFormCheckbox noStyle name="autoLogin">
               自动登录
             </ProFormCheckbox>
-            <Divider type="vertical"/>
+            <Divider type="vertical" />
             <a
               style={{
                 float: 'right',
               }}
               href={'/user/register'}
               target="_blank"
-              rel={"noreferrer"}
+              rel={'noreferrer'}
             >
               注册
             </a>
@@ -242,4 +243,5 @@ const Login: React.FC = () => {
     </div>
   );
 };
+
 export default Login;
