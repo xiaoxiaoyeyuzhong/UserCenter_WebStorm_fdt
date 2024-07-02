@@ -22,6 +22,8 @@ declare namespace API {
     createTime: Date;
 
     userRole: number;
+
+    planetCode: string;
   };
 
   type LoginResult = {
@@ -52,6 +54,14 @@ declare namespace API {
     progress?: number;
   };
 
+  // 通用的返回类,将传进来的泛型给到data
+  type BaseResponse<T> = {
+    code: number;
+    data: T;
+    message: string;
+    description: string;
+  }
+
   type RuleList = {
     data?: RuleListItem[];
     /** 列表的内容总数 */
@@ -76,6 +86,7 @@ declare namespace API {
     userAccount?: string;
     userPassword?: string;
     checkPassword?: string;
+    planetCode?: string;
     type?: string;
   };
 

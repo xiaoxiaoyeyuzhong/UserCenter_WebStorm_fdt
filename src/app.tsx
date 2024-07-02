@@ -11,9 +11,9 @@ import {RequestConfig} from "@@/plugin-request/request";
 // import {prefix} from "stylis";
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
-//const NO_NEED_WHITE_LIST = ['/user/register',loginPath]
-//TODO 现在直接删除了白名单里的loginPath，但是这样会使进入登录页时再查用户信息，看看能否修改
-const NO_NEED_WHITE_LIST = ['/user/register']
+const NO_NEED_WHITE_LIST = ['/user/register',loginPath]
+// 现在直接删除了白名单里的loginPath，但是这样会使进入登录页时再查用户信息，看看能否修改
+// const NO_NEED_WHITE_LIST = ['/user/register']
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
@@ -22,18 +22,19 @@ const NO_NEED_WHITE_LIST = ['/user/register']
  */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: API.CurrentUser;
+  currentUser?: API.BaseResponse<API.CurrentUser>;
   loading?: boolean;
-  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  // fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  fetchUserInfo?: () => Promise<API.BaseResponse<API.CurrentUser> | undefined>;
 }> {
   const fetchUserInfo = async () => {
     // 加入白名单，如果路径在白名单里，不需要获取用户信息和跳转到登录页。
     // const { location } = history;
 
-    if (NO_NEED_WHITE_LIST.includes(history.location.pathname)) {
-      // alert("进入app.tsx，白名单逻辑")
-      return undefined;
-    }
+    // if (NO_NEED_WHITE_LIST.includes(history.location.pathname)) {
+    //   // alert("进入app.tsx，白名单逻辑1")
+    //   return undefined;
+    // }
     try {
       const user = await queryCurrentUser({
         skipErrorHandler: true,
@@ -47,7 +48,7 @@ export async function getInitialState(): Promise<{
 
   // 如果是不需要登录态的页面，不执行
   if (NO_NEED_WHITE_LIST.includes(history.location.pathname)) {
-    // alert("进入app.tsx，白名单逻辑")
+    // alert("进入app.tsx，白名单逻辑2")
     return {
       // @ts-ignore
       fetchUserInfo,
@@ -84,7 +85,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       const { location } = history;
       // 如果没有登录，重定向到 login
       if (!initialState?.currentUser && !NO_NEED_WHITE_LIST.includes(location.pathname)) {
-        // alert("进入app.tsx，白名单逻辑2")
+        // alert("进入app.tsx，白名单逻辑3")
         history.push(loginPath);
       }
     },

@@ -13,10 +13,11 @@ export default [
     path: '/admin',
     name: '管理页',
     icon: 'crown',
+    // 只有当access.tsx中的canAdmin返回true，才能访问管理页
     access: 'canAdmin',
     routes: [
       { path: '/admin', redirect: '/admin/sub-page' },
-      { path: '/admin/sub-page', name: '二级管理页', component: './Admin' },
+      { path: '/admin/user-manage', name: '用户管理', component: './Admin/UserManage' },
     ],
   },
   { name: '查询表格', icon: 'table', path: '/list', component: './TableList' },

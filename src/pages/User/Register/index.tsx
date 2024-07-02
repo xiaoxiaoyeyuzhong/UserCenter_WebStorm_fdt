@@ -82,7 +82,8 @@ const Register: React.FC = () => {
     try {
       // 注册
       const id = await register(values);
-      if (id>0) {
+        if (id){
+      // if (result.code===0 && result.data>0) {
         const defaultLoginSuccessMessage = '注册成功！';
         message.success(defaultLoginSuccessMessage);
         // 重定向
@@ -91,16 +92,13 @@ const Register: React.FC = () => {
         const redirect = urlParams.get('redirect');
         // history.push('/user/login?redirect='+redirect);
         history.push({
-          pathname: 'user/login',
+          pathname: '/user/login',
           search: redirect ? `?redirect=${redirect}` : '',
         });
         return;
-      }else{
-        throw new Error(`register error id=${id}`)
       }
-    } catch (error) {
+    } catch (error:any) {
       const defaultLoginFailureMessage = '注册失败，请重试！';
-      console.log(error);
       message.error(defaultLoginFailureMessage);
     }
   };
@@ -168,6 +166,11 @@ const Register: React.FC = () => {
                     required: true,
                     message: '账号是必填项！',
                   },
+                  {
+                    min: 4,
+                    type: 'string',
+                    message: '账号长度不小于4！',
+                  },
                 ]}
               />
               <ProFormText.Password
@@ -207,8 +210,21 @@ const Register: React.FC = () => {
                     message: '重复密码长度不小于8！',
                   },
                 ]}
+              />,
+              <ProFormText
+                name="planetCode"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <UserOutlined/>,
+                }}
+                placeholder={'请输入星球编号'}
+                rules={[
+                  {
+                    required: true,
+                    message: '星球编号是必填项！',
+                  },
+                ]}
               />
-
             </>
           )}
           <a
