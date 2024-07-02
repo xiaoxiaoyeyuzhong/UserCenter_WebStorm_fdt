@@ -103,14 +103,14 @@ const Login: React.FC = () => {
     }
   };
 
-  const { status, type: loginType } = userLoginState;
-
-  useEffect(() => {
-    if (status === 'ok') {
-      // 用户登录成功，重定向到指定页面
-      history.push('/');
-    }
-  }, [status]);
+  // const { status, type: loginType } = userLoginState;
+  //
+  // useEffect(() => {
+  //   if (status === 'ok') {
+  //     // 用户登录成功，重定向到指定页面
+  //     history.push('/');
+  //   }
+  // }, [status]);
 
   return (
     <div className={styles.container}>
