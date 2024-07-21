@@ -7,8 +7,8 @@
 _roadhog-api-doc
 .umi
 
-# production，但是为了docker构建，需要dist下已经build完毕的项目
-#/dist
+# production
+/dist
 
 # misc
 .DS_Store
