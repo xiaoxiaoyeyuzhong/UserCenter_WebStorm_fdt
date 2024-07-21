@@ -97,7 +97,7 @@ const Login: React.FC = () => {
         return;
       }
       // 如果登录失败，设置用户登录状态
-      setUserLoginState(user);
+      // setUserLoginState(user);
     } catch (error) {
       message.error('登录失败，请重试！');
     }
@@ -130,7 +130,7 @@ const Login: React.FC = () => {
           }}
         >
           <Tabs activeKey={type} onChange={setType} centered items={[{ key: 'account', label: '账户密码登录' }]} />
-          {status === 'error' && loginType === 'account' && <LoginMessage content={'错误的账号和密码'} />}
+          {/*{status === 'error' && loginType === 'account' && <LoginMessage content={'错误的账号和密码'} />}*/}
           {type === 'account' && (
             <>
               <ProFormText
