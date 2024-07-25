@@ -1,5 +1,4 @@
 import {AvatarDropdown, AvatarName, Footer, Question} from '@/components';
-// import {currentUser as queryCurrentUser} from '@/services/ant-design-pro/api';
 import {currentUser as queryCurrentUser} from '@/services/ant-design-pro/api';
 import {LinkOutlined} from '@ant-design/icons';
 import type {Settings as LayoutSettings} from '@ant-design/pro-components';
@@ -7,13 +6,14 @@ import {SettingDrawer} from '@ant-design/pro-components';
 import type {RunTimeLayoutConfig} from '@umijs/max';
 import {history, Link} from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
-import {RequestConfig} from "@@/plugin-request/request";
-// import {prefix} from "stylis";
 const isDev = process.env.NODE_ENV === 'development';
-const loginPath = '/user/login';
-const NO_NEED_WHITE_LIST = ['/user/register',loginPath]
-// 现在直接删除了白名单里的loginPath，但是这样会使进入登录页时再查用户信息，看看能否修改
-// const NO_NEED_WHITE_LIST = ['/user/register']
+// 这里白名单中的路径最后都要加上/，因为build后，history.location.pathname最后会有一个/。
+const loginPath_DEV = '/user/login'
+const loginPath_PROD = '/user/login/'
+const loginPath = isDev? loginPath_DEV : loginPath_PROD;
+const NO_NEED_WHITE_LIST_DEV = ['/user/register',loginPath]
+const NO_NEED_WHITE_LIST_PROD=['/user/register/',loginPath]
+const NO_NEED_WHITE_LIST = isDev ? NO_NEED_WHITE_LIST_DEV : NO_NEED_WHITE_LIST_PROD;
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
@@ -24,40 +24,31 @@ export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.BaseResponse<API.CurrentUser>;
   loading?: boolean;
-  // fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
   fetchUserInfo?: () => Promise<API.BaseResponse<API.CurrentUser> | undefined>;
 }> {
   const fetchUserInfo = async () => {
-    // 加入白名单，如果路径在白名单里，不需要获取用户信息和跳转到登录页。
-    // const { location } = history;
-
-    // if (NO_NEED_WHITE_LIST.includes(history.location.pathname)) {
-    //   // alert("进入app.tsx，白名单逻辑1")
-    //   return undefined;
-    // }
     try {
       const user = await queryCurrentUser({
         skipErrorHandler: true,
       });
       return user;
     } catch (error) {
-      history.push(loginPath);
+      history.push("/user/login")
     }
     return undefined;
   };
 
+  console.log(history.location.pathname);
+  console.log(NO_NEED_WHITE_LIST.toString());
   // 如果是不需要登录态的页面，不执行
   if (NO_NEED_WHITE_LIST.includes(history.location.pathname)) {
-    // alert("进入app.tsx，白名单逻辑2")
     return {
-      // @ts-ignore
       fetchUserInfo,
       settings: defaultSettings as Partial<LayoutSettings>,
     };
   }
   const currentUser = await fetchUserInfo();
   return {
-    // @ts-ignore
     fetchUserInfo,
     currentUser,
     settings: defaultSettings as Partial<LayoutSettings>,
@@ -85,8 +76,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       const { location } = history;
       // 如果没有登录，重定向到 login
       if (!initialState?.currentUser && !NO_NEED_WHITE_LIST.includes(location.pathname)) {
-        // alert("进入app.tsx，白名单逻辑3")
-        history.push(loginPath);
+        history.push("/user/login")
       }
     },
     bgLayoutImgList: [
@@ -157,11 +147,3 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
 // };
 
 
-
-export const request: RequestConfig = {
-  // timeout: 10000,
-  // requestInterceptors: [
-  //   prefix("http://localhost:8080/api") // 传递prefix函数需要的参数
-  // ],
-  // prefix: "http://localhost:8080"
-};

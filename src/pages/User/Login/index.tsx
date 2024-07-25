@@ -1,13 +1,14 @@
 import { Footer } from '@/components';
 import { login } from '@/services/ant-design-pro/api';
-import { AlipayCircleOutlined, LockOutlined, UserOutlined, TaobaoCircleOutlined, WeiboCircleOutlined } from '@ant-design/icons';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
 import { Helmet, history, useModel } from '@umijs/max';
-import { Alert, Tabs, message, Divider } from 'antd';
+import { Tabs, message, Divider } from 'antd';
 import { createStyles } from 'antd-style';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
+import { Link } from 'react-router-dom';
 
 const useStyles = createStyles(({ token }) => ({
   action: {
@@ -41,34 +42,10 @@ const useStyles = createStyles(({ token }) => ({
     backgroundSize: '100% 100%',
   },
 }));
-
-const ActionIcons = () => {
-  const { styles } = useStyles();
-  return (
-    <>
-      <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.action} />
-      <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.action} />
-      <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.action} />
-    </>
-  );
-};
-
 const Lang = () => {
-  const { styles } = useStyles();
   return null; // 确保返回null而不是空对象
 };
-
-const LoginMessage: React.FC<{ content: string }> = ({ content }) => (
-  <Alert
-    style={{ marginBottom: 24 }}
-    message={content}
-    type="error"
-    showIcon
-  />
-);
-
 const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
   const { styles } = useStyles();
@@ -96,21 +73,11 @@ const Login: React.FC = () => {
         history.push('/');
         return;
       }
-      // 如果登录失败，设置用户登录状态
-      // setUserLoginState(user);
     } catch (error) {
       message.error('登录失败，请重试！');
     }
   };
 
-  // const { status, type: loginType } = userLoginState;
-  //
-  // useEffect(() => {
-  //   if (status === 'ok') {
-  //     // 用户登录成功，重定向到指定页面
-  //     history.push('/');
-  //   }
-  // }, [status]);
 
   return (
     <div className={styles.container}>
@@ -130,7 +97,6 @@ const Login: React.FC = () => {
           }}
         >
           <Tabs activeKey={type} onChange={setType} centered items={[{ key: 'account', label: '账户密码登录' }]} />
-          {/*{status === 'error' && loginType === 'account' && <LoginMessage content={'错误的账号和密码'} />}*/}
           {type === 'account' && (
             <>
               <ProFormText
@@ -153,6 +119,7 @@ const Login: React.FC = () => {
           <div style={{ marginBottom: 24 }}>
             <ProFormCheckbox noStyle name="autoLogin">自动登录</ProFormCheckbox>
             <Divider type="vertical" />
+            {/*<Link to="/user/register" >注册</Link>*/}
             <a
               style={{ float: 'right' }}
               href={'/user/register'}

@@ -13,6 +13,7 @@ import { Alert, Tabs, message } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import Settings from '../../../../config/defaultSettings';
+import {Link} from "react-router-dom";
 const useStyles = createStyles(({ token }) => {
   return {
     action: {
@@ -71,7 +72,6 @@ const Register: React.FC = () => {
   const { styles } = useStyles();
   // 表单提交
   const handleSubmit = async (values: API.RegisterParams) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const {userAccount,userPassword,checkPassword}=values;
     //校验
     // !==不仅判断值，还会判断类型
@@ -83,14 +83,12 @@ const Register: React.FC = () => {
       // 注册
       const id = await register(values);
         if (id){
-      // if (result.code===0 && result.data>0) {
         const defaultLoginSuccessMessage = '注册成功！';
         message.success(defaultLoginSuccessMessage);
         // 重定向
         const urlParams = new URL(window.location.href).searchParams;
         // 使用 get 方法获取指定键的值
         const redirect = urlParams.get('redirect');
-        // history.push('/user/login?redirect='+redirect);
         history.push({
           pathname: '/user/login',
           search: redirect ? `?redirect=${redirect}` : '',
@@ -227,6 +225,7 @@ const Register: React.FC = () => {
               />
             </>
           )}
+          {/*<Link to="/user/login" >登录</Link>*/}
           <a
             style={{
               float: 'right',

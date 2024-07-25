@@ -12,7 +12,7 @@ import {stringify} from "querystring";
  */
 const request = extend({
   credentials: 'include', // 默认请求是否带上cookie
-  prefix: process.env.NODE_ENV === 'production'?'http://user-backend.code-nav.cn':undefined
+  prefix: process.env.NODE_ENV === 'production'?'http://8.138.44.135':undefined
   // requestType: 'form',
 });
 
@@ -41,9 +41,10 @@ request.interceptors.response.use(async (response, options): Promise<any> => {
   if (request.code === 0){
     return request.data;
   }
+  // message.error("Current path: " + history.location.pathname);
   // 状态码显示未登录，显示未登录错误，重定向到登录页
   if (request.code === 40100){
-    message.error("请先登录");
+    message.error("请先登录，未登陆是不能访问内部页面的");
     history.replace({
       pathname: '/user/login',
       search: stringify({
