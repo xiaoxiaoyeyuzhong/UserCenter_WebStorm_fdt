@@ -40,7 +40,8 @@ export async function getInitialState(): Promise<{
 
   console.log(history.location.pathname);
   console.log(NO_NEED_WHITE_LIST.toString());
-  // 如果是不需要登录态的页面，不执行
+  /* 如果是不需要登录态的页面，不执行，因为登录页也在白名单里（不需要获取登录态的页面），
+     所以登录页需要额外写一个在登录成功后设置currentUser的函数。*/
   if (NO_NEED_WHITE_LIST.includes(history.location.pathname)) {
     return {
       fetchUserInfo,

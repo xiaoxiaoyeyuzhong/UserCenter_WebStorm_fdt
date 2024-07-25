@@ -49,7 +49,8 @@ const Login: React.FC = () => {
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
   const { styles } = useStyles();
-
+  /* 这里定义的fetchUserInfo首先获取当前用户信息，
+     然后设置initialState中的currentUser，将用户信息变成全局可用的信息*/
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
     if (userInfo) {
